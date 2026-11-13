@@ -82,7 +82,7 @@ export default function Login() {
       if (error) {
         setError(error.message);
       } else {
-        setMensaje("✅ Cuenta creada. Ya puedes iniciar sesión.");
+        setMensaje("Cuenta creada. Ya puedes iniciar sesión.");
         console.log("Usuario registrado:", data.user);
         // Limpiar formulario
         setEmail("");
@@ -104,7 +104,7 @@ export default function Login() {
       if (error) {
         setError(error.message);
       } else {
-        setMensaje("✅ Login exitoso. Redirigiendo...");
+        setMensaje("Login exitoso. Redirigiendo...");
         console.log("Usuario autenticado:", data.user);
         // Aquí redirigiremos al Inicio después
         setTimeout(() => {
@@ -147,6 +147,7 @@ export default function Login() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              autoComplete="off"
             />
           </div>
 
@@ -163,6 +164,7 @@ export default function Login() {
                 }}
                 required
                 minLength={8}
+                autoComplete="new-password"
               />
               <button
                 type="button"
@@ -195,6 +197,7 @@ export default function Login() {
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   required
+                  autoComplete="new-password"
                 />
               </div>
 
@@ -207,6 +210,7 @@ export default function Login() {
                   onChange={(e) => setTelefono(e.target.value)}
                   required
                   pattern="[0-9]{10}"
+                  autoComplete="off"
                 />
               </div>
 
@@ -220,6 +224,7 @@ export default function Login() {
                   required
                   min="1920-01-01"
                   max="2010-12-31"
+                  autoComplete="off"
                 />
               </div>
             </>
