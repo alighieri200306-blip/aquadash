@@ -98,7 +98,7 @@ export default function Login() {
         setError(error.message);
       } else {
         setMensaje(
-          `✅ Cuenta creada con rol: ${rolAsignado}. Ya puedes iniciar sesión.`,
+          `Cuenta creada con rol: ${rolAsignado}. Ya puedes iniciar sesión.`,
         );
         console.log(
           "Usuario registrado:",

@@ -14,6 +14,8 @@ import{supabase}from"../lib/supabaseClient";
 
 import {useNavigate} from "react-router-dom";
 
+import Navbar from "../components/Navbar";
+
 export default function Inicio() {
   const sistema = getSystemInfo();
   const parametrosAgua = getWaterParameters();
@@ -82,27 +84,9 @@ async function handleLogout() {
             <span>Monitoreo</span>
           </div>
         </div>
-
-        <ul className="enlaces-nav">
-            <li className="activo">
-            <a href="#">Inico</a>
-          </li>
-          <li>
-            <a href="#">Histórico</a>
-          </li>
-          <li>
-            <a href="#">Configuración</a>
-          </li>
-          <li>
-            <a href="#">Mantenimiento</a>
-          </li>
-          <li>
-            <a href="#">Alertas</a>
-          </li>
-          <li>
-            <a href="#">Grabaciones</a>
-          </li>
-        </ul>
+        <div className="enlaces-nav">
+          <Navbar />
+        </div>
       </nav>
 
       {/* CABECERA SUPERIOR */}

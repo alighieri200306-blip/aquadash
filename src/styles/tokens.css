@@ -526,3 +526,322 @@ body {
 .btn-logout:active {
   transform: scale(0.98);
 }
+
+/* ===== Gestión de Usuarios (dentro de Configuración) ===== */
+.gestion-usuarios {
+  padding: 20px 0;
+}
+
+.gestion-usuarios header {
+  margin-bottom: 30px;
+  border-bottom: 2px solid #e0e0e0;
+  padding-bottom: 20px;
+}
+
+.gestion-usuarios header h1 {
+  color: #2c3e50;
+  font-size: 28px;
+  margin-bottom: 8px;
+}
+
+.gestion-usuarios header p {
+  color: #7f8c8d;
+  font-size: 14px;
+}
+
+.filtros-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.filtros-container label {
+  font-weight: 500;
+  color: #2c3e50;
+}
+
+.select-filtro {
+  padding: 8px 12px;
+  border: 2px solid #dcdde1;
+  border-radius: 6px;
+  font-size: 14px;
+  background-color: #ffffff;
+  cursor: pointer;
+}
+
+.select-filtro:focus {
+  outline: none;
+  border-color: #3498db;
+}
+
+.tabla-usuarios {
+  width: 100%;
+  border-collapse: collapse;
+  background: #ffffff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.tabla-usuarios thead {
+  background-color: #34495e;
+  color: #ffffff;
+}
+
+.tabla-usuarios th,
+.tabla-usuarios td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.tabla-usuarios tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+.badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.badge-administrador {
+  background-color: #e74c3c;
+  color: #ffffff;
+}
+
+.badge-operador {
+  background-color: #f39c12;
+  color: #ffffff;
+}
+
+.badge-visitante {
+  background-color: #3498db;
+  color: #ffffff;
+}
+
+.badge-activo {
+  background-color: #27ae60;
+  color: #ffffff;
+}
+
+.badge-inactivo {
+  background-color: #95a5a6;
+  color: #ffffff;
+}
+
+.toggle-estado {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.toggle-estado input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: #27ae60;
+}
+
+.select-edicion {
+  padding: 6px 10px;
+  border: 2px solid #3498db;
+  border-radius: 6px;
+  font-size: 13px;
+  background-color: #ffffff;
+}
+
+.btn-editar,
+.btn-guardar,
+.btn-cancelar,
+.btn-eliminar {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  margin-right: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.btn-editar {
+  background-color: #3498db;
+  color: #ffffff;
+}
+
+.btn-editar:hover {
+  background-color: #2980b9;
+}
+
+.btn-guardar {
+  background-color: #27ae60;
+  color: #ffffff;
+}
+
+.btn-guardar:hover {
+  background-color: #229954;
+}
+
+.btn-cancelar {
+  background-color: #95a5a6;
+  color: #ffffff;
+}
+
+.btn-cancelar:hover {
+  background-color: #7f8c8d;
+}
+
+.btn-eliminar {
+  background-color: #e74c3c;
+  color: #ffffff;
+}
+
+.btn-eliminar:hover {
+  background-color: #c0392b;
+}
+
+.total-usuarios {
+  margin-top: 20px;
+  color: #7f8c8d;
+  font-size: 14px;
+  text-align: right;
+}
+
+/* ===== Configuración (contenedor principal) ===== */
+.configuracion-container {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 20px;
+}
+
+.configuracion-container header {
+  margin-bottom: 30px;
+  border-bottom: 2px solid #e0e0e0;
+  padding-bottom: 20px;
+}
+
+.configuracion-container header h1 {
+  color: #2c3e50;
+  font-size: 28px;
+  margin-bottom: 8px;
+}
+
+.configuracion-container header p {
+  color: #7f8c8d;
+  font-size: 14px;
+}
+
+.sub-pestanas {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 30px;
+  border-bottom: 2px solid #e0e0e0;
+  padding-bottom: 10px;
+}
+
+.sub-pestanas button {
+  padding: 10px 20px;
+  background-color: #ecf0f1;
+  color: #2c3e50;
+  border: none;
+  border-radius: 6px 6px 0 0;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+}
+
+.sub-pestanas button:hover {
+  background-color: #dfe6e9;
+}
+
+.sub-pestanas button.activa {
+  background-color: #3498db;
+  color: #ffffff;
+}
+
+/* ===== Barra de navegación ===== */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #7f8c8d;
+  padding: 12px 24px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.navbar-logo {
+  font-size: 24px;
+}
+
+.navbar-enlaces {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.navbar-link {
+  padding: 8px 16px;
+  background-color: transparent;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+}
+
+.navbar-link:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.navbar-link.activo {
+  background-color: #ffffff;
+  color: #2c3e50;
+  font-weight: 600;
+}
+
+.navbar .btn-logout {
+  margin-left: 10px;
+  padding: 8px 16px;
+  background-color: #e74c3c;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.navbar .btn-logout:hover {
+  background-color: #c0392b;
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .navbar-enlaces {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
