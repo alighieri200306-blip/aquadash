@@ -8,6 +8,31 @@ export default function GestionUsuarios() {
   const [filtro, setFiltro] = useState("todos");
   const [editandoId, setEditandoId] = useState(null);
   const [rolTemporal, setRolTemporal] = useState("");
+  const [miRol, setMiRol] = useState(null);
+
+  // 1. PRIMERO las funciones (antes del useEffect)
+  async function cargarMiRol() {
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const userId = session?.user?.id;
+
+      if (!userId) {
+        setMiRol(null);
+        return;
+      }
+
+      const { data: miPerfil, error } = await supabase
+        .from("profiles")
+        .select("rol")
+        .eq("id", userId)
+        .single();
+
+      if (error) throw error;
+      setMiRol(miPerfil?.rol || null);
+    } catch (err) {
+      console.error("Error al cargar mi rol:", err);
+    }
+  }
 
   async function cargarUsuarios() {
     try {
@@ -26,15 +51,21 @@ export default function GestionUsuarios() {
     }
   }
 
-  // ✅ useEffect corregido
+  // 2. DESPUÉS el useEffect (ya puede llamar las funciones sin problema)
   useEffect(() => {
     async function iniciar() {
+      await cargarMiRol();
       await cargarUsuarios();
     }
     iniciar();
   }, []);
 
   async function actualizarRol(id, nuevoRol) {
+    if (miRol !== "Administrador") {
+      alert("Solo los Administradores pueden cambiar roles.");
+      return;
+    }
+
     try {
       const { error } = await supabase
         .from("profiles")
@@ -54,6 +85,11 @@ export default function GestionUsuarios() {
   }
 
   async function actualizarEstado(id, nuevoEstado) {
+    if (miRol !== "Administrador") {
+      alert("Solo los Administradores pueden cambiar estados.");
+      return;
+    }
+
     try {
       const { error } = await supabase
         .from("profiles")
@@ -72,6 +108,11 @@ export default function GestionUsuarios() {
   }
 
   async function eliminarUsuario(id) {
+    if (miRol !== "Administrador") {
+      alert("Solo los Administradores pueden eliminar usuarios.");
+      return;
+    }
+
     if (!confirm("¿Estás seguro de eliminar este usuario? Esta acción no se puede deshacer.")) {
       return;
     }
@@ -109,11 +150,20 @@ export default function GestionUsuarios() {
     return <div className="gestion-usuarios"><p className="mensaje-error">Error: {error}</p></div>;
   }
 
+  const esAdmin = miRol === "Administrador";
+
   return (
     <div className="gestion-usuarios">
       <header>
         <h1>Gestión de Usuarios</h1>
-        <p>Gestiona quién puede visualizar métricas, alterar setpoints o accionar actuadores</p>
+        <p>
+          Gestiona quién puede visualizar métricas, alterar setpoints o accionar actuadores
+          {!esAdmin && (
+            <span style={{ color: "#e74c3c", marginLeft: "10px" }}>
+              (Modo solo lectura - No eres Administrador)
+            </span>
+          )}
+        </p>
       </header>
 
       <div className="filtros-container">
@@ -140,7 +190,7 @@ export default function GestionUsuarios() {
             <th>Rol</th>
             <th>Estado</th>
             <th>Notificaciones</th>
-            <th>Acciones</th>
+            {esAdmin && <th>Acciones</th>}
           </tr>
         </thead>
         <tbody>
@@ -148,7 +198,7 @@ export default function GestionUsuarios() {
             <tr key={usuario.id}>
               <td>{usuario.nombre || "Sin nombre"}</td>
               <td>
-                {editandoId === usuario.id ? (
+                {esAdmin && editandoId === usuario.id ? (
                   <select
                     value={rolTemporal}
                     onChange={(e) => setRolTemporal(e.target.value)}
@@ -165,24 +215,33 @@ export default function GestionUsuarios() {
                 )}
               </td>
               <td>
-                <label className="toggle-estado">
-                  <input
-                    type="checkbox"
-                    checked={usuario.estado === "activo"}
-                    onChange={(e) => 
-                      actualizarEstado(usuario.id, e.target.checked ? "activo" : "inactivo")
-                    }
-                  />
+                {esAdmin ? (
+                  <label className="toggle-estado">
+                    <input
+                      type="checkbox"
+                      checked={usuario.estado === "activo"}
+                      onChange={(e) => 
+                        actualizarEstado(usuario.id, e.target.checked ? "activo" : "inactivo")
+                      }
+                    />
+                    <span className={`badge badge-${usuario.estado}`}>
+                      {usuario.estado}
+                    </span>
+                  </label>
+                ) : (
                   <span className={`badge badge-${usuario.estado}`}>
                     {usuario.estado}
                   </span>
-                </label>
+                )}
               </td>
               <td>
                 <input
                   type="checkbox"
                   checked={usuario.notificaciones}
+                  disabled={!esAdmin}
                   onChange={async (e) => {
+                    if (!esAdmin) return;
+                    
                     const { error } = await supabase
                       .from("profiles")
                       .update({ notificaciones: e.target.checked })
@@ -196,42 +255,44 @@ export default function GestionUsuarios() {
                   }}
                 />
               </td>
-              <td>
-                {editandoId === usuario.id ? (
-                  <>
-                    <button 
-                      onClick={() => actualizarRol(usuario.id, rolTemporal)}
-                      className="btn-guardar"
-                    >
-                      Guardar
-                    </button>
-                    <button 
-                      onClick={() => setEditandoId(null)}
-                      className="btn-cancelar"
-                    >
-                      Cancelar
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <button 
-                      onClick={() => {
-                        setEditandoId(usuario.id);
-                        setRolTemporal(usuario.rol);
-                      }}
-                      className="btn-editar"
-                    >
-                      Editar
-                    </button>
-                    <button 
-                      onClick={() => eliminarUsuario(usuario.id)}
-                      className="btn-eliminar"
-                    >
-                      Eliminar
-                    </button>
-                  </>
-                )}
-              </td>
+              {esAdmin && (
+                <td>
+                  {editandoId === usuario.id ? (
+                    <>
+                      <button 
+                        onClick={() => actualizarRol(usuario.id, rolTemporal)}
+                        className="btn-guardar"
+                      >
+                        Guardar
+                      </button>
+                      <button 
+                        onClick={() => setEditandoId(null)}
+                        className="btn-cancelar"
+                      >
+                        Cancelar
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <button 
+                        onClick={() => {
+                          setEditandoId(usuario.id);
+                          setRolTemporal(usuario.rol);
+                        }}
+                        className="btn-editar"
+                      >
+                        Editar
+                      </button>
+                      <button 
+                        onClick={() => eliminarUsuario(usuario.id)}
+                        className="btn-eliminar"
+                      >
+                        Eliminar
+                      </button>
+                    </>
+                  )}
+                </td>
+              )}
             </tr>
           ))}
         </tbody>
