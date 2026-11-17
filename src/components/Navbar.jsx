@@ -1,9 +1,10 @@
-import { useNavigate, useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { supabase } from "../lib/supabaseClient";
+import { useNavigate } from "react-router-dom";
 
-export default function Navbar({ onLogout }) {
-  const navigate = useNavigate();
+export default function Navbar() {
   const location = useLocation();
+  const navigate = useNavigate();
 
   const enlaces = [
     { ruta: "/", texto: "Inicio" },
@@ -17,7 +18,6 @@ export default function Navbar({ onLogout }) {
   async function handleLogout() {
     const { error } = await supabase.auth.signOut();
     if (!error) {
-      if (onLogout) onLogout();
       navigate("/login");
     }
   }
@@ -28,20 +28,23 @@ export default function Navbar({ onLogout }) {
         <span className="navbar-logo">⊠</span>
         <span className="navbar-titulo">AquaDash Monitoreo</span>
       </div>
-      <div className="navbar-enlaces">
+      <ul className="navbar-enlaces">
         {enlaces.map((enlace) => (
-          <button
-            key={enlace.ruta}
-            className={`navbar-link ${location.pathname === enlace.ruta ? "activo" : ""}`}
-            onClick={() => navigate(enlace.ruta)}
-          >
-            {enlace.texto}
-          </button>
+          <li key={enlace.ruta}>
+            <Link
+              to={enlace.ruta}
+              className={`navbar-link ${location.pathname === enlace.ruta ? "activo" : ""}`}
+            >
+              {enlace.texto}
+            </Link>
+          </li>
         ))}
-        <button className="btn-logout" onClick={handleLogout}>
-          Cerrar sesión
-        </button>
-      </div>
+        <li>
+          <button className="btn-logout" onClick={handleLogout}>
+            Cerrar sesión
+          </button>
+        </li>
+      </ul>
     </nav>
   );
 }
