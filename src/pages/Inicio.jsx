@@ -4,11 +4,15 @@ import {
   getPlantParameters,
   getMaintenanceTasks,
 } from "../data/mockData";
+
 import{
   useState,
   useEffect
 }from "react";
+
 import{supabase}from"../supabaseClient";
+
+import {useNavigate} from "react-router-dom";
 
 export default function Inicio() {
   const sistema = getSystemInfo();
@@ -17,7 +21,21 @@ export default function Inicio() {
   const tareas = getMaintenanceTasks();
   const [nombreUsuario,setNombreUsuario]=useState("Usuario");
   const [cargando, setCargando] = useState(true);
+  const navigate = useNavigate();
 
+  // Función para cerrar sesión del usuario
+async function handleLogout() {
+  const { error } = await supabase.auth.signOut();
+  
+  if (error) {
+    console.error("Error al cerrar sesión:", error.message);
+  } else {
+    console.log("✅ Sesión cerrada correctamente");
+    navigate("/login");
+  }
+}
+
+//Funcion para obtener el nombre del usuario autenticado y mostrarlo en la interfaz
   useEffect(() => {
   async function obtenerNombreUsuario() {
     try {
@@ -97,6 +115,8 @@ export default function Inicio() {
           <div className="reloj">18:42:02</div>
           <div className="biomasa">Biomasa activa: {sistema.biomasa}</div>
         </div>
+        
+        <button className="btn-logout" onClick={handleLogout}>Cerrar sesión</button>
       </header>
 
       {/* CONTENIDO DE LA PÁGINA (TARJETAS) */}

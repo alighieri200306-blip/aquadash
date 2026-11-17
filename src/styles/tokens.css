@@ -505,3 +505,24 @@ body {
     font-size: 22px;
   }
 }
+
+/* ===== Botón de Logout ===== */
+.btn-logout {
+  padding: 8px 16px;
+  background-color: #e74c3c;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+.btn-logout:hover {
+  background-color: #c0392b;
+}
+
+.btn-logout:active {
+  transform: scale(0.98);
+}
