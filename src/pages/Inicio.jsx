@@ -40,7 +40,8 @@ async function handleLogout() {
   async function obtenerNombreUsuario() {
     try {
       // 1. Obtener el usuario autenticado actual
-      const { data: { user }, error: userError } = await supabase.auth.getSession();
+      const { data: { session }, error: userError } = await supabase.auth.getSession();
+      const user = session?.user;
       
       if (userError || !user) {
         console.error("Error al obtener usuario:", userError);
