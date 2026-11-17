@@ -75,15 +75,8 @@ async function handleLogout() {
   return (
     // En JSX usamos "className" en lugar de "class"
     <div className="layout-principal">
-      {/* BARRA DE NAVEGACIÓN SUPERIOR */}
+      {/* BARRA DE NAVEGACIÓN */}
       <nav className="barra-navegacion">
-        <div className="logo-nav">
-          <span className="icono-logo">☒</span>
-          <div className="texto-logo">
-            <span>AquaDash</span>
-            <span>Monitoreo</span>
-          </div>
-        </div>
         <div className="enlaces-nav">
           <Navbar />
         </div>
