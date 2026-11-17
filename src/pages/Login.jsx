@@ -13,6 +13,7 @@ export default function Login() {
   const [mensaje, setMensaje] = useState(null);
   const [error, setError] = useState(null);
   const [mostrarPassword, setMostrarPassword] = useState(false);
+  const [codigoAdmin, setCodigoAdmin] = useState("");
 
   // Validaciones
   const regexCorreo = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
@@ -20,17 +21,25 @@ export default function Login() {
 
   const reglasContraseña = [
     { texto: "Mínimo 8 caracteres", prueba: (valor) => valor.length >= 8 },
-    { texto: "Al menos una letra mayúscula", prueba: (valor) => /[A-Z]/.test(valor) },
-    { texto: "Al menos una letra minúscula", prueba: (valor) => /[a-z]/.test(valor) },
-    { texto: "Al menos un número", prueba: (valor) => /[0-9]/.test(valor) }
+    {
+      texto: "Al menos una letra mayúscula",
+      prueba: (valor) => /[A-Z]/.test(valor),
+    },
+    {
+      texto: "Al menos una letra minúscula",
+      prueba: (valor) => /[a-z]/.test(valor),
+    },
+    { texto: "Al menos un número", prueba: (valor) => /[0-9]/.test(valor) },
   ];
 
   const [requisitosCumplidos, setRequisitosCumplidos] = useState(
-    reglasContraseña.map(() => false)
+    reglasContraseña.map(() => false),
   );
 
   function actualizarRequisitos(valor) {
-    const nuevosRequisitos = reglasContraseña.map((regla) => regla.prueba(valor));
+    const nuevosRequisitos = reglasContraseña.map((regla) =>
+      regla.prueba(valor),
+    );
     setRequisitosCumplidos(nuevosRequisitos);
   }
 
@@ -66,15 +75,21 @@ export default function Login() {
         return;
       }
 
+      // Determinar el rol según el código de administrador
+      const CODIGO_ADMIN_SECRETO = "AQUADASH2026"; // Cambia este código por el que quieras
+      const rolAsignado =
+        codigoAdmin === CODIGO_ADMIN_SECRETO ? "Administrador" : "Visitante";
+
       // Registro en Supabase
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
-          data: { 
+          data: {
             nombre: nombre,
             telefono: telefono,
-            fecha_nacimiento: fechaNac
+            fecha_nacimiento: fechaNac,
+            rol: rolAsignado, // ← Esto es lo nuevo
           },
         },
       });
@@ -82,8 +97,16 @@ export default function Login() {
       if (error) {
         setError(error.message);
       } else {
-        setMensaje("Cuenta creada. Ya puedes iniciar sesión.");
-        console.log("Usuario registrado:", data.user);
+        setMensaje(
+          `✅ Cuenta creada con rol: ${rolAsignado}. Ya puedes iniciar sesión.`,
+        );
+        console.log(
+          "Usuario registrado:",
+          data.user,
+          "Rol asignado:",
+          rolAsignado,
+        );
+
         // Limpiar formulario
         setEmail("");
         setPassword("");
@@ -91,6 +114,7 @@ export default function Login() {
         setNombre("");
         setTelefono("");
         setFechaNac("");
+        setCodigoAdmin(""); // ← Limpiar el código también
         setTerminos(false);
         setEsRegistro(false);
       }
@@ -118,12 +142,18 @@ export default function Login() {
     <div className="login-container">
       <header>
         <h1>{esRegistro ? "Crear cuenta" : "Iniciar Sesión"} - AquaDash</h1>
-        <p>{esRegistro ? "Completa todos los campos para registrarte." : "Ingresa tus credenciales"}</p>
+        <p>
+          {esRegistro
+            ? "Completa todos los campos para registrarte."
+            : "Ingresa tus credenciales"}
+        </p>
       </header>
 
       <form onSubmit={handleSubmit}>
         <fieldset>
-          <legend>{esRegistro ? "Datos para el registro" : "Credenciales"}</legend>
+          <legend>
+            {esRegistro ? "Datos para el registro" : "Credenciales"}
+          </legend>
 
           {esRegistro && (
             <div className="campo">
@@ -182,7 +212,10 @@ export default function Login() {
                 <label>Requisitos de contraseña:</label>
                 <ul className="lista-requisitos">
                   {reglasContraseña.map((regla, index) => (
-                    <li key={index} className={requisitosCumplidos[index] ? "cumplida" : ""}>
+                    <li
+                      key={index}
+                      className={requisitosCumplidos[index] ? "cumplida" : ""}
+                    >
                       {regla.texto}
                     </li>
                   ))}
@@ -202,7 +235,9 @@ export default function Login() {
               </div>
 
               <div className="campo">
-                <label htmlFor="telefono">Número telefónico (10 dígitos):</label>
+                <label htmlFor="telefono">
+                  Número telefónico (10 dígitos):
+                </label>
                 <input
                   id="telefono"
                   type="tel"
@@ -227,6 +262,18 @@ export default function Login() {
                   autoComplete="off"
                 />
               </div>
+              <div className="campo">
+                <label htmlFor="codigoAdmin">
+                  Código de administrador (opcional):
+                </label>
+                <input
+                  id="codigoAdmin"
+                  type="password"
+                  value={codigoAdmin}
+                  onChange={(e) => setCodigoAdmin(e.target.value)}
+                  placeholder="Déjalo vacío si no eres administrador"
+                />
+              </div>
             </>
           )}
 
@@ -239,7 +286,9 @@ export default function Login() {
                 onChange={(e) => setTerminos(e.target.checked)}
                 required
               />
-              <label htmlFor="terminos">Acepto los términos y condiciones</label>
+              <label htmlFor="terminos">
+                Acepto los términos y condiciones
+              </label>
             </div>
           )}
         </fieldset>
@@ -247,9 +296,7 @@ export default function Login() {
         {error && <p className="mensaje-error">{error}</p>}
         {mensaje && <p className="mensaje-exito">{mensaje}</p>}
 
-        <button type="submit">
-          {esRegistro ? "Registrarme" : "Entrar"}
-        </button>
+        <button type="submit">{esRegistro ? "Registrarme" : "Entrar"}</button>
       </form>
 
       <button
@@ -260,7 +307,9 @@ export default function Login() {
           setError(null);
         }}
       >
-        {esRegistro ? "¿Ya tienes cuenta? Inicia sesión" : "¿No tienes cuenta? Regístrate"}
+        {esRegistro
+          ? "¿Ya tienes cuenta? Inicia sesión"
+          : "¿No tienes cuenta? Regístrate"}
       </button>
     </div>
   );
