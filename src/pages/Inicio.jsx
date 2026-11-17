@@ -4,12 +4,53 @@ import {
   getPlantParameters,
   getMaintenanceTasks,
 } from "../data/mockData";
+import{
+  useState,
+  useEffect
+}from "react";
+import{supabase}from"../supabaseClient";
 
 export default function Inicio() {
   const sistema = getSystemInfo();
   const parametrosAgua = getWaterParameters();
   const parametrosPlantas = getPlantParameters();
   const tareas = getMaintenanceTasks();
+  const [nombreUsuario,setNombreUsuario]=useState("Usuario");
+  const [cargando, setCargando] = useState(true);
+
+  useEffect(() => {
+  async function obtenerNombreUsuario() {
+    try {
+      // 1. Obtener el usuario autenticado actual
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      
+      if (userError || !user) {
+        console.error("Error al obtener usuario:", userError);
+        return;
+      }
+
+      // 2. Consultar la tabla profiles para obtener el nombre
+      const { data: perfil, error: perfilError } = await supabase
+        .from("profiles")
+        .select("nombre")
+        .eq("id", user.id)
+        .single();
+
+      if (perfilError) {
+        console.error("Error al obtener perfil:", perfilError);
+      } else if (perfil) {
+        setNombreUsuario(perfil.nombre);
+      }
+    } catch (error) {
+      console.error("Error inesperado:", error);
+    } finally {
+      setCargando(false);
+    }
+  }
+
+  obtenerNombreUsuario();
+}, []);
+
   return (
     // En JSX usamos "className" en lugar de "class"
     <div className="layout-principal">
@@ -49,7 +90,7 @@ export default function Inicio() {
       <header className="cabecera">
         <div className="cabecera-info">
           <h1>AquaDash - Monitoreo Acuapónico</h1>
-          <p>Bienvenido de nuevo {sistema.usuario}.</p>
+          <p>{cargando ? "Cargando..." : `Bienvenido de nuevo ${nombreUsuario}.`}</p>
           <p>Estado: {sistema.estadoGlobal}.</p>
         </div>
         <div className="cabecera-estado">
