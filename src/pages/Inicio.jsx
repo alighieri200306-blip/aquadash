@@ -12,8 +12,6 @@ import{
 
 import{supabase}from"../lib/supabaseClient";
 
-import {useNavigate} from "react-router-dom";
-
 import Navbar from "../components/Navbar";
 
 export default function Inicio() {
@@ -23,19 +21,6 @@ export default function Inicio() {
   const tareas = getMaintenanceTasks();
   const [nombreUsuario,setNombreUsuario]=useState("Usuario");
   const [cargando, setCargando] = useState(true);
-  const navigate = useNavigate();
-
-  // Función para cerrar sesión del usuario
-async function handleLogout() {
-  const { error } = await supabase.auth.signOut();
-  
-  if (error) {
-    console.error("Error al cerrar sesión:", error.message);
-  } else {
-    console.log("Sesión cerrada correctamente");
-    navigate("/login");
-  }
-}
 
 //Funcion para obtener el nombre del usuario autenticado y mostrarlo en la interfaz
   useEffect(() => {
@@ -74,13 +59,8 @@ async function handleLogout() {
 
   return (
     // En JSX usamos "className" en lugar de "class"
-    <div className="layout-principal">
-      {/* BARRA DE NAVEGACIÓN */}
-      <nav className="barra-navegacion">
-        <div className="enlaces-nav">
-          <Navbar />
-        </div>
-      </nav>
+    <div>
+      <Navbar />
 
       {/* CABECERA SUPERIOR */}
       <header className="cabecera">
@@ -93,8 +73,6 @@ async function handleLogout() {
           <div className="reloj">18:42:02</div>
           <div className="biomasa">Biomasa activa: {sistema.biomasa}</div>
         </div>
-
-        <button className="btn-logout" onClick={handleLogout}>Cerrar sesión</button>
       </header>
 
       {/* CONTENIDO DE LA PÁGINA (TARJETAS) */}
