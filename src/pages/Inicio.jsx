@@ -10,7 +10,7 @@ import{
   useEffect
 }from "react";
 
-import{supabase}from"../supabaseClient";
+import{supabase}from"../lib/supabaseClient";
 
 import {useNavigate} from "react-router-dom";
 
@@ -30,7 +30,7 @@ async function handleLogout() {
   if (error) {
     console.error("Error al cerrar sesión:", error.message);
   } else {
-    console.log("✅ Sesión cerrada correctamente");
+    console.log("Sesión cerrada correctamente");
     navigate("/login");
   }
 }
@@ -115,7 +115,7 @@ async function handleLogout() {
           <div className="reloj">18:42:02</div>
           <div className="biomasa">Biomasa activa: {sistema.biomasa}</div>
         </div>
-        
+
         <button className="btn-logout" onClick={handleLogout}>Cerrar sesión</button>
       </header>
 
