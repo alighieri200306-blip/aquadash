@@ -11,14 +11,24 @@ export default function GestionUsuarios() {
   const [miRol, setMiRol] = useState(null);
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
   const [formData, setFormData] = useState({
-    nombre: "", email: "", password: "", rol: "Visitante", estado: "activo", notificaciones: true
+    nombre: "",
+    email: "",
+    password: "",
+    rol: "Visitante",
+    estado: "activo",
+    notificaciones: true,
   });
 
   async function cargarMiRol() {
     try {
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
       const userId = session?.user?.id;
-      if (!userId) { setMiRol(null); return; }
+      if (!userId) {
+        setMiRol(null);
+        return;
+      }
 
       const { data: miPerfil, error } = await supabase
         .from("profiles")
@@ -64,9 +74,14 @@ export default function GestionUsuarios() {
       return;
     }
     try {
-      const { error } = await supabase.from("profiles").update({ rol: nuevoRol }).eq("id", id);
+      const { error } = await supabase
+        .from("profiles")
+        .update({ rol: nuevoRol })
+        .eq("id", id);
       if (error) throw error;
-      setUsuarios(usuarios.map(u => u.id === id ? { ...u, rol: nuevoRol } : u));
+      setUsuarios(
+        usuarios.map((u) => (u.id === id ? { ...u, rol: nuevoRol } : u)),
+      );
       setEditandoId(null);
     } catch (err) {
       console.error("Error al actualizar rol:", err);
@@ -80,9 +95,14 @@ export default function GestionUsuarios() {
       return;
     }
     try {
-      const { error } = await supabase.from("profiles").update({ estado: nuevoEstado }).eq("id", id);
+      const { error } = await supabase
+        .from("profiles")
+        .update({ estado: nuevoEstado })
+        .eq("id", id);
       if (error) throw error;
-      setUsuarios(usuarios.map(u => u.id === id ? { ...u, estado: nuevoEstado } : u));
+      setUsuarios(
+        usuarios.map((u) => (u.id === id ? { ...u, estado: nuevoEstado } : u)),
+      );
     } catch (err) {
       console.error("Error al actualizar estado:", err);
       setError(err.message);
@@ -94,11 +114,31 @@ export default function GestionUsuarios() {
       alert("Solo los Administradores pueden eliminar usuarios.");
       return;
     }
-    if (!confirm("¿Estás seguro de eliminar este usuario? Esta acción no se puede deshacer.")) return;
+    if (!confirm("¿Estás seguro? Se eliminará al usuario de forma permanente."))
+      return;
+
     try {
-      const { error } = await supabase.from("profiles").delete().eq("id", id);
-      if (error) throw error;
-      setUsuarios(usuarios.filter(u => u.id !== id));
+      // Llamar a la Edge Function que borra de auth.users + profiles
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/delete-user`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${session?.access_token}`,
+          },
+          body: JSON.stringify({ userId: id }),
+        },
+      );
+
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || "Error al eliminar");
+
+      setUsuarios(usuarios.filter((u) => u.id !== id));
     } catch (err) {
       console.error("Error al eliminar usuario:", err);
       setError(err.message);
@@ -118,8 +158,8 @@ export default function GestionUsuarios() {
         email: formData.email,
         password: formData.password,
         options: {
-          data: { nombre: formData.nombre, rol: formData.rol }
-        }
+          data: { nombre: formData.nombre, rol: formData.rol },
+        },
       });
 
       if (authError) throw authError;
@@ -128,11 +168,11 @@ export default function GestionUsuarios() {
       if (authData.user) {
         const { error: updateError } = await supabase
           .from("profiles")
-          .update({ 
+          .update({
             nombre: formData.nombre,
             rol: formData.rol,
             estado: formData.estado,
-            notificaciones: formData.notificaciones
+            notificaciones: formData.notificaciones,
           })
           .eq("id", authData.user.id);
 
@@ -140,7 +180,14 @@ export default function GestionUsuarios() {
       }
 
       // 3. Resetear formulario y recargar
-      setFormData({ nombre: "", email: "", password: "", rol: "Visitante", estado: "activo", notificaciones: true });
+      setFormData({
+        nombre: "",
+        email: "",
+        password: "",
+        rol: "Visitante",
+        estado: "activo",
+        notificaciones: true,
+      });
       setMostrarFormulario(false);
       await cargarUsuarios();
     } catch (err) {
@@ -149,7 +196,7 @@ export default function GestionUsuarios() {
     }
   }
 
-  const usuariosFiltrados = usuarios.filter(u => {
+  const usuariosFiltrados = usuarios.filter((u) => {
     if (filtro === "todos") return true;
     if (filtro === "activos") return u.estado === "activo";
     if (filtro === "inactivos") return u.estado === "inactivo";
@@ -161,28 +208,43 @@ export default function GestionUsuarios() {
 
   const esAdmin = miRol === "Administrador";
 
-  if (cargando) return <div className="gestion-usuarios"><p>Cargando usuarios...</p></div>;
-  if (error) return <div className="gestion-usuarios"><p className="mensaje-error">Error: {error}</p></div>;
+  if (cargando)
+    return (
+      <div className="gestion-usuarios">
+        <p>Cargando usuarios...</p>
+      </div>
+    );
+  if (error)
+    return (
+      <div className="gestion-usuarios">
+        <p className="mensaje-error">Error: {error}</p>
+      </div>
+    );
 
   return (
     <div className="gestion-usuarios">
       {/* Sección: Información de los Usuarios */}
       <section className="seccion-info">
         <h2>Información de los Usuarios</h2>
-        <p className="subtitulo-seccion">Datos generales de los usuarios dentro del sistema</p>
+        <p className="subtitulo-seccion">
+          Datos generales de los usuarios dentro del sistema
+        </p>
       </section>
 
       {/* Sección: Usuarios con Acceso */}
       <section className="seccion-usuarios">
         <h3>Usuarios con Acceso</h3>
-        <p className="descripcion-seccion">Gestiona quién puede visualizar métricas, alterar setpoints o accionar actuadores</p>
+        <p className="descripcion-seccion">
+          Gestiona quién puede visualizar métricas, alterar setpoints o accionar
+          actuadores
+        </p>
 
         <div className="controles-usuarios">
           <div className="filtro-container">
             <label htmlFor="filtro-usuarios">Filtrar por:</label>
-            <select 
+            <select
               id="filtro-usuarios"
-              value={filtro} 
+              value={filtro}
               onChange={(e) => setFiltro(e.target.value)}
               className="select-filtro"
             >
@@ -196,7 +258,7 @@ export default function GestionUsuarios() {
           </div>
 
           {esAdmin && (
-            <button 
+            <button
               className="btn-agregar"
               onClick={() => setMostrarFormulario(true)}
             >
@@ -210,47 +272,65 @@ export default function GestionUsuarios() {
           <form className="formulario-alta" onSubmit={handleCrearUsuario}>
             <h4>Nuevo Usuario</h4>
             <div className="grid-form">
-              <input 
-                type="text" 
-                placeholder="Nombre completo" 
+              <input
+                type="text"
+                placeholder="Nombre completo"
                 value={formData.nombre}
-                onChange={(e) => setFormData({...formData, nombre: e.target.value})}
-                required 
+                onChange={(e) =>
+                  setFormData({ ...formData, nombre: e.target.value })
+                }
+                required
               />
-              <input 
-                type="email" 
-                placeholder="Correo electrónico" 
+              <input
+                type="email"
+                placeholder="Correo electrónico"
                 value={formData.email}
-                onChange={(e) => setFormData({...formData, email: e.target.value})}
-                required 
+                onChange={(e) =>
+                  setFormData({ ...formData, email: e.target.value })
+                }
+                required
               />
-              <input 
-                type="password" 
-                placeholder="Contraseña (mínimo 8 caracteres)" 
+              <input
+                type="password"
+                placeholder="Contraseña (mínimo 8 caracteres)"
                 value={formData.password}
-                onChange={(e) => setFormData({...formData, password: e.target.value})}
+                onChange={(e) =>
+                  setFormData({ ...formData, password: e.target.value })
+                }
                 minLength={8}
-                required 
+                required
               />
-              <select 
+              <select
                 value={formData.rol}
-                onChange={(e) => setFormData({...formData, rol: e.target.value})}
+                onChange={(e) =>
+                  setFormData({ ...formData, rol: e.target.value })
+                }
               >
                 <option value="Visitante">Visitante</option>
                 <option value="Operador">Operador</option>
                 <option value="Administrador">Administrador</option>
               </select>
-              <select 
+              <select
                 value={formData.estado}
-                onChange={(e) => setFormData({...formData, estado: e.target.value})}
+                onChange={(e) =>
+                  setFormData({ ...formData, estado: e.target.value })
+                }
               >
                 <option value="activo">Activo</option>
                 <option value="inactivo">Inactivo</option>
               </select>
             </div>
             <div className="form-actions">
-              <button type="submit" className="btn-guardar">Crear usuario</button>
-              <button type="button" className="btn-cancelar" onClick={() => setMostrarFormulario(false)}>Cancelar</button>
+              <button type="submit" className="btn-guardar">
+                Crear usuario
+              </button>
+              <button
+                type="button"
+                className="btn-cancelar"
+                onClick={() => setMostrarFormulario(false)}
+              >
+                Cancelar
+              </button>
             </div>
           </form>
         )}
@@ -282,7 +362,9 @@ export default function GestionUsuarios() {
                       <option value="Visitante">Visitante</option>
                     </select>
                   ) : (
-                    <span className={`badge badge-${usuario.rol.toLowerCase()}`}>
+                    <span
+                      className={`badge badge-${usuario.rol.toLowerCase()}`}
+                    >
                       {usuario.rol}
                     </span>
                   )}
@@ -293,7 +375,12 @@ export default function GestionUsuarios() {
                       <input
                         type="checkbox"
                         checked={usuario.estado === "activo"}
-                        onChange={(e) => actualizarEstado(usuario.id, e.target.checked ? "activo" : "inactivo")}
+                        onChange={(e) =>
+                          actualizarEstado(
+                            usuario.id,
+                            e.target.checked ? "activo" : "inactivo",
+                          )
+                        }
                       />
                       <span className={`badge badge-${usuario.estado}`}>
                         {usuario.estado}
@@ -317,7 +404,13 @@ export default function GestionUsuarios() {
                         .update({ notificaciones: e.target.checked })
                         .eq("id", usuario.id);
                       if (!error) {
-                        setUsuarios(usuarios.map(u => u.id === usuario.id ? { ...u, notificaciones: e.target.checked } : u));
+                        setUsuarios(
+                          usuarios.map((u) =>
+                            u.id === usuario.id
+                              ? { ...u, notificaciones: e.target.checked }
+                              : u,
+                          ),
+                        );
                       }
                     }}
                   />
@@ -326,13 +419,36 @@ export default function GestionUsuarios() {
                   <td>
                     {editandoId === usuario.id ? (
                       <>
-                        <button onClick={() => actualizarRol(usuario.id, rolTemporal)} className="btn-guardar">Guardar</button>
-                        <button onClick={() => setEditandoId(null)} className="btn-cancelar">Cancelar</button>
+                        <button
+                          onClick={() => actualizarRol(usuario.id, rolTemporal)}
+                          className="btn-guardar"
+                        >
+                          Guardar
+                        </button>
+                        <button
+                          onClick={() => setEditandoId(null)}
+                          className="btn-cancelar"
+                        >
+                          Cancelar
+                        </button>
                       </>
                     ) : (
                       <>
-                        <button onClick={() => { setEditandoId(usuario.id); setRolTemporal(usuario.rol); }} className="btn-editar">✏️</button>
-                        <button onClick={() => eliminarUsuario(usuario.id)} className="btn-eliminar">🗑️</button>
+                        <button
+                          onClick={() => {
+                            setEditandoId(usuario.id);
+                            setRolTemporal(usuario.rol);
+                          }}
+                          className="btn-editar"
+                        >
+                          ✏️
+                        </button>
+                        <button
+                          onClick={() => eliminarUsuario(usuario.id)}
+                          className="btn-eliminar"
+                        >
+                          🗑️
+                        </button>
                       </>
                     )}
                   </td>
@@ -411,8 +527,10 @@ export default function GestionUsuarios() {
       {/* Sección: Ajuste de notificaciones */}
       <section className="seccion-notificaciones">
         <h3>Ajuste de notificaciones</h3>
-        <p className="descripcion-seccion">Configura las preferencias de notificaciones por rol</p>
-        
+        <p className="descripcion-seccion">
+          Configura las preferencias de notificaciones por rol
+        </p>
+
         <div className="opciones-notificaciones">
           <label className="opcion-notif">
             <input type="checkbox" defaultChecked />
@@ -435,7 +553,7 @@ export default function GestionUsuarios() {
 
       {/* Footer con última actualización */}
       <footer className="footer-config">
-        <p>Última actualización: {new Date().toLocaleString('es-MX')}</p>
+        <p>Última actualización: {new Date().toLocaleString("es-MX")}</p>
       </footer>
     </div>
   );
