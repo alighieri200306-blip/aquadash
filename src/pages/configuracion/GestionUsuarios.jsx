@@ -109,6 +109,7 @@ export default function GestionUsuarios() {
     }
   }
 
+  // ✅ ÚNICO CAMBIO: versión simple que ya funcionaba (delete directo en profiles)
   async function eliminarUsuario(id) {
     if (miRol !== "Administrador") {
       alert("Solo los Administradores pueden eliminar usuarios.");
@@ -118,25 +119,12 @@ export default function GestionUsuarios() {
       return;
 
     try {
-      // Llamar a la Edge Function que borra de auth.users + profiles
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
+      const { error } = await supabase
+        .from("profiles")
+        .delete()
+        .eq("id", id);
 
-      const response = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/delete-user`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${session?.access_token}`,
-          },
-          body: JSON.stringify({ userId: id }),
-        },
-      );
-
-      const result = await response.json();
-      if (!response.ok) throw new Error(result.error || "Error al eliminar");
+      if (error) throw error;
 
       setUsuarios(usuarios.filter((u) => u.id !== id));
     } catch (err) {
