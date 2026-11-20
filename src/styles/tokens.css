@@ -1376,6 +1376,8 @@ body {
   font-size: 14px;
   background-color: #ffffff;
   transition: border-color 0.2s;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .campo-form input:focus,
@@ -1389,6 +1391,14 @@ body {
   background-color: #f1f3f5;
   color: #868e96;
   cursor: not-allowed;
+}
+
+/* ✅ NUEVO: Grid de 3 columnas fijas, responsivo */
+.grid-form {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 15px;
 }
 
 /* Input con unidad (ej: 5 min) */
@@ -1412,6 +1422,7 @@ body {
   border: none;
   flex: 1;
   border-radius: 0;
+  min-width: 0;
 }
 
 .input-con-unidad input:focus {
@@ -1426,8 +1437,45 @@ body {
   font-weight: 600;
   border-left: 1px solid #ced4da;
   user-select: none;
+  white-space: nowrap;
 }
 
+/* ✅ "Última lectura" ocupa toda la fila */
 .campo-completo {
   grid-column: 1 / -1;
+}
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+
+/* ✅ RESPONSIVE: 2 columnas en tablet */
+@media (max-width: 900px) {
+  .grid-form {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ✅ RESPONSIVE: 1 columna en móvil */
+@media (max-width: 600px) {
+  .grid-form {
+    grid-template-columns: 1fr;
+  }
+  
+  .controles-sensores {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .filtros-tabs {
+    flex-wrap: wrap;
+  }
+  
+  .tabla-dispositivos {
+    display: block;
+    overflow-x: auto;
+  }
 }
