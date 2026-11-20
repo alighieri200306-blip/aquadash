@@ -6,13 +6,19 @@ export default function Sensores() {
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(null);
   const [filtro, setFiltro] = useState("todos"); // 'todos', 'Sensor', 'Actuador'
-  
+
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
   const [editandoId, setEditandoId] = useState(null);
   const [miRol, setMiRol] = useState(null);
-  
+
   const [formData, setFormData] = useState({
-    nombre: "", categoria: "Sensor", tipo: "", modelo: "", intervalo_min: 5, estado: "En línea", ultima_lectura: ""
+    nombre: "",
+    categoria: "Sensor",
+    tipo: "",
+    modelo: "",
+    intervalo_min: 5,
+    estado: "En línea",
+    ultima_lectura: "",
   });
 
   useEffect(() => {
@@ -25,16 +31,27 @@ export default function Sensores() {
 
   async function cargarMiRol() {
     try {
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
       if (!session?.user?.id) return;
-      const { data: perfil } = await supabase.from("profiles").select("rol").eq("id", session.user.id).single();
+      const { data: perfil } = await supabase
+        .from("profiles")
+        .select("rol")
+        .eq("id", session.user.id)
+        .single();
       setMiRol(perfil?.rol || null);
-    } catch (err) { console.error(err); }
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   async function cargarDispositivos() {
     try {
-      const { data, error } = await supabase.from("devices").select("*").order("created_at", { ascending: false });
+      const { data, error } = await supabase
+        .from("devices")
+        .select("*")
+        .order("created_at", { ascending: false });
       if (error) throw error;
       setDispositivos(data || []);
     } catch (err) {
@@ -51,17 +68,31 @@ export default function Sensores() {
 
   async function handleGuardar(e) {
     e.preventDefault();
-    if (miRol !== "Administrador") { alert("Solo Administradores pueden gestionar dispositivos."); return; }
-    
+    if (miRol !== "Administrador") {
+      alert("Solo Administradores pueden gestionar dispositivos.");
+      return;
+    }
+
     try {
       if (editandoId) {
-        const { error } = await supabase.from("devices").update(formData).eq("id", editandoId);
+        const { error } = await supabase
+          .from("devices")
+          .update(formData)
+          .eq("id", editandoId);
         if (error) throw error;
       } else {
         const { error } = await supabase.from("devices").insert([formData]);
         if (error) throw error;
       }
-      setFormData({ nombre: "", categoria: "Sensor", tipo: "", modelo: "", intervalo_min: 5, estado: "En línea", ultima_lectura: "" });
+      setFormData({
+        nombre: "",
+        categoria: "Sensor",
+        tipo: "",
+        modelo: "",
+        intervalo_min: 5,
+        estado: "En línea",
+        ultima_lectura: "",
+      });
       setEditandoId(null);
       setMostrarFormulario(false);
       await cargarDispositivos();
@@ -78,7 +109,10 @@ export default function Sensores() {
   }
 
   async function handleEliminar(id) {
-    if (miRol !== "Administrador") { alert("Solo Administradores pueden eliminar."); return; }
+    if (miRol !== "Administrador") {
+      alert("Solo Administradores pueden eliminar.");
+      return;
+    }
     if (!confirm("¿Seguro que deseas eliminar este dispositivo?")) return;
     try {
       const { error } = await supabase.from("devices").delete().eq("id", id);
@@ -90,36 +124,78 @@ export default function Sensores() {
     }
   }
 
-  const dispositivosFiltrados = dispositivos.filter(d => filtro === "todos" ? true : d.categoria === filtro);
-  const totalSensores = dispositivos.filter(d => d.categoria === "Sensor").length;
-  const totalActuadores = dispositivos.filter(d => d.categoria === "Actuador").length;
+  const dispositivosFiltrados = dispositivos.filter((d) =>
+    filtro === "todos" ? true : d.categoria === filtro,
+  );
+  const totalSensores = dispositivos.filter(
+    (d) => d.categoria === "Sensor",
+  ).length;
+  const totalActuadores = dispositivos.filter(
+    (d) => d.categoria === "Actuador",
+  ).length;
   const esAdmin = miRol === "Administrador";
 
-  if (cargando) return <div className="gestion-sensores"><p>Cargando dispositivos...</p></div>;
-  if (error) return <div className="gestion-sensores"><p className="mensaje-error">Error: {error}</p></div>;
+  if (cargando)
+    return (
+      <div className="gestion-sensores">
+        <p>Cargando dispositivos...</p>
+      </div>
+    );
+  if (error)
+    return (
+      <div className="gestion-sensores">
+        <p className="mensaje-error">Error: {error}</p>
+      </div>
+    );
 
   return (
     <div className="gestion-sensores">
       <section className="seccion-info">
         <h2>Información de los Sensores</h2>
-        <p className="subtitulo-seccion">Datos generales de los sensores dentro del sistema</p>
+        <p className="subtitulo-seccion">
+          Datos generales de los sensores dentro del sistema
+        </p>
       </section>
 
       <section className="seccion-dispositivos">
         <div className="controles-sensores">
           <div className="filtros-tabs">
-            <button className={filtro === "todos" ? "activo" : ""} onClick={() => setFiltro("todos")}>
+            <button
+              className={filtro === "todos" ? "activo" : ""}
+              onClick={() => setFiltro("todos")}
+            >
               Todos los Dispositivos ({dispositivos.length})
             </button>
-            <button className={filtro === "Sensor" ? "activo" : ""} onClick={() => setFiltro("Sensor")}>
+            <button
+              className={filtro === "Sensor" ? "activo" : ""}
+              onClick={() => setFiltro("Sensor")}
+            >
               Sensores ({totalSensores})
             </button>
-            <button className={filtro === "Actuador" ? "activo" : ""} onClick={() => setFiltro("Actuador")}>
+            <button
+              className={filtro === "Actuador" ? "activo" : ""}
+              onClick={() => setFiltro("Actuador")}
+            >
               Actuadores ({totalActuadores})
             </button>
           </div>
           {esAdmin && (
-            <button className="btn-agregar" onClick={() => { setMostrarFormulario(true); setEditandoId(null); setFormData({ nombre: "", categoria: "Sensor", tipo: "", modelo: "", intervalo_min: 5, estado: "En línea", ultima_lectura: "" }); }}>
+            <button
+              className="btn-agregar"
+              onClick={() => {
+                setMostrarFormulario(true);
+                setEditandoId(null);
+                setFormData({
+                  nombre: "",
+                  categoria: "Sensor",
+                  tipo: "",
+                  modelo: "",
+                  intervalo_min: 5,
+                  estado: "En línea",
+                  ultima_lectura: "",
+                });
+              }}
+            >
               + Agregar sensor o actuador
             </button>
           )}
@@ -128,25 +204,131 @@ export default function Sensores() {
         {mostrarFormulario && esAdmin && (
           <form className="formulario-dispositivo" onSubmit={handleGuardar}>
             <h4>{editandoId ? "Editar Dispositivo" : "Nuevo Dispositivo"}</h4>
+            <p className="descripcion-form">
+              {editandoId
+                ? "Modifica los datos del dispositivo seleccionado"
+                : "Registra un nuevo sensor o actuador en el sistema"}
+            </p>
+
             <div className="grid-form">
-              <input name="nombre" placeholder="Nombre (ej: Sensor pH-01)" value={formData.nombre} onChange={handleChange} required />
-              <select name="categoria" value={formData.categoria} onChange={handleChange}>
-                <option value="Sensor">Sensor</option>
-                <option value="Actuador">Actuador</option>
-              </select>
-              <input name="tipo" placeholder="Tipo (ej: pH, Bomba)" value={formData.tipo} onChange={handleChange} required />
-              <input name="modelo" placeholder="Modelo (ej: lH500)" value={formData.modelo} onChange={handleChange} />
-              <input name="intervalo_min" type="number" placeholder="Intervalo (min)" value={formData.intervalo_min} onChange={handleChange} />
-              <select name="estado" value={formData.estado} onChange={handleChange}>
-                <option value="En línea">En línea</option>
-                <option value="Advertencia">Advertencia</option>
-                <option value="Desconectado">Desconectado</option>
-              </select>
-              <input name="ultima_lectura" placeholder="Última lectura (ej: 7.12 pH)" value={formData.ultima_lectura} onChange={handleChange} />
+              <div className="campo-form">
+                <label htmlFor="nombre">Nombre del dispositivo *</label>
+                <input
+                  id="nombre"
+                  name="nombre"
+                  placeholder="Ej: Sensor pH-01"
+                  value={formData.nombre}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+
+              <div className="campo-form">
+                <label htmlFor="categoria">Categoría *</label>
+                <select
+                  id="categoria"
+                  name="categoria"
+                  value={formData.categoria}
+                  onChange={handleChange}
+                >
+                  <option value="Sensor">Sensor</option>
+                  <option value="Actuador">Actuador</option>
+                </select>
+              </div>
+
+              <div className="campo-form">
+                <label htmlFor="tipo">Tipo / Parámetro *</label>
+                <input
+                  id="tipo"
+                  name="tipo"
+                  placeholder="Ej: pH, Temperatura, Bomba"
+                  value={formData.tipo}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+
+              <div className="campo-form">
+                <label htmlFor="modelo">Modelo</label>
+                <input
+                  id="modelo"
+                  name="modelo"
+                  placeholder="Ej: lH500"
+                  value={formData.modelo}
+                  onChange={handleChange}
+                />
+              </div>
+
+              <div className="campo-form">
+                <label htmlFor="intervalo_min">
+                  Intervalo de lectura *
+                  <span className="hint">
+                    {formData.categoria === "Sensor"
+                      ? "(cada cuántos minutos toma una muestra)"
+                      : "(no aplica para actuadores)"}
+                  </span>
+                </label>
+                <div className="input-con-unidad">
+                  <input
+                    id="intervalo_min"
+                    name="intervalo_min"
+                    type="number"
+                    min="0"
+                    placeholder="5"
+                    value={formData.intervalo_min}
+                    onChange={handleChange}
+                    disabled={formData.categoria === "Actuador"}
+                  />
+                  <span className="unidad">min</span>
+                </div>
+              </div>
+
+              <div className="campo-form">
+                <label htmlFor="estado">Estado *</label>
+                <select
+                  id="estado"
+                  name="estado"
+                  value={formData.estado}
+                  onChange={handleChange}
+                >
+                  <option value="En línea">En línea</option>
+                  <option value="Advertencia">Advertencia</option>
+                  <option value="Desconectado">Desconectado</option>
+                </select>
+              </div>
+
+              <div className="campo-form campo-completo">
+                <label htmlFor="ultima_lectura">
+                  Última lectura
+                  <span className="hint">
+                    {formData.categoria === "Sensor"
+                      ? "(valor más reciente registrado, ej: 7.12 pH, 25.8 °C)"
+                      : "(estado actual, ej: ON, OFF)"}
+                  </span>
+                </label>
+                <input
+                  id="ultima_lectura"
+                  name="ultima_lectura"
+                  placeholder={
+                    formData.categoria === "Sensor" ? "Ej: 7.12 pH" : "Ej: ON"
+                  }
+                  value={formData.ultima_lectura}
+                  onChange={handleChange}
+                />
+              </div>
             </div>
+
             <div className="form-actions">
-              <button type="submit" className="btn-guardar">Guardar</button>
-              <button type="button" className="btn-cancelar" onClick={() => setMostrarFormulario(false)}>Cancelar</button>
+              <button type="submit" className="btn-guardar">
+                {editandoId ? "Guardar cambios" : "Crear dispositivo"}
+              </button>
+              <button
+                type="button"
+                className="btn-cancelar"
+                onClick={() => setMostrarFormulario(false)}
+              >
+                Cancelar
+              </button>
             </div>
           </form>
         )}
@@ -169,17 +351,48 @@ export default function Sensores() {
                 <td>{d.nombre}</td>
                 <td>{d.tipo}</td>
                 <td>{d.modelo || "—"}</td>
-                <td>{d.categoria === "Sensor" ? `${d.intervalo_min} min` : "—"}</td>
                 <td>
-                  <span className={`badge-estado ${d.estado === "En línea" ? "en-linea" : d.estado === "Advertencia" ? "advertencia" : "desconectado"}`}>
-                    {d.estado === "En línea" ? "🟢" : d.estado === "Advertencia" ? "🔵" : "⚪"} {d.estado}
+                  {d.categoria === "Sensor" ? `${d.intervalo_min} min` : "—"}
+                </td>
+                <td>
+                  <span
+                    className={`badge-estado ${d.estado === "En línea" ? "en-linea" : d.estado === "Advertencia" ? "advertencia" : "desconectado"}`}
+                  >
+                    {d.estado === "En línea"
+                      ? "🟢"
+                      : d.estado === "Advertencia"
+                        ? "🔵"
+                        : "⚪"}{" "}
+                    {d.estado}
                   </span>
                 </td>
                 <td>{d.ultima_lectura || "—"}</td>
                 <td className="acciones-cell">
-                  <button className="btn-accion" title="Recalibrar" onClick={() => alert("Recalibración simulada")}>🔄</button>
-                  {esAdmin && <button className="btn-accion" title="Editar" onClick={() => handleEditar(d)}>☰</button>}
-                  {esAdmin && <button className="btn-accion btn-eliminar-icon" title="Eliminar" onClick={() => handleEliminar(d.id)}>🗑</button>}
+                  <button
+                    className="btn-accion"
+                    title="Recalibrar"
+                    onClick={() => alert("Recalibración simulada")}
+                  >
+                    🔄
+                  </button>
+                  {esAdmin && (
+                    <button
+                      className="btn-accion"
+                      title="Editar"
+                      onClick={() => handleEditar(d)}
+                    >
+                      ☰
+                    </button>
+                  )}
+                  {esAdmin && (
+                    <button
+                      className="btn-accion btn-eliminar-icon"
+                      title="Eliminar"
+                      onClick={() => handleEliminar(d.id)}
+                    >
+                      🗑
+                    </button>
+                  )}
                 </td>
               </tr>
             ))}

@@ -1338,3 +1338,96 @@ body {
 .btn-accion { background: none; border: none; cursor: pointer; font-size: 18px; padding: 4px; border-radius: 4px; transition: background 0.2s; }
 .btn-accion:hover { background: #e9ecef; }
 .btn-eliminar-icon:hover { background: #ffe3e3; }
+
+/* ===== Mejoras al formulario de Sensores ===== */
+.descripcion-form {
+  color: #6b7c8d;
+  font-size: 14px;
+  margin-top: -10px;
+  margin-bottom: 20px;
+}
+
+.campo-form {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.campo-form label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1a2a3a;
+}
+
+.campo-form .hint {
+  display: block;
+  font-size: 11px;
+  font-weight: 400;
+  color: #868e96;
+  margin-top: 2px;
+  font-style: italic;
+}
+
+.campo-form input,
+.campo-form select {
+  padding: 10px 12px;
+  border: 1px solid #ced4da;
+  border-radius: 6px;
+  font-size: 14px;
+  background-color: #ffffff;
+  transition: border-color 0.2s;
+}
+
+.campo-form input:focus,
+.campo-form select:focus {
+  outline: none;
+  border-color: #228be6;
+  box-shadow: 0 0 0 3px rgba(34, 139, 230, 0.1);
+}
+
+.campo-form input:disabled {
+  background-color: #f1f3f5;
+  color: #868e96;
+  cursor: not-allowed;
+}
+
+/* Input con unidad (ej: 5 min) */
+.input-con-unidad {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  border: 1px solid #ced4da;
+  border-radius: 6px;
+  overflow: hidden;
+  background-color: #ffffff;
+  transition: border-color 0.2s;
+}
+
+.input-con-unidad:focus-within {
+  border-color: #228be6;
+  box-shadow: 0 0 0 3px rgba(34, 139, 230, 0.1);
+}
+
+.input-con-unidad input {
+  border: none;
+  flex: 1;
+  border-radius: 0;
+}
+
+.input-con-unidad input:focus {
+  box-shadow: none;
+}
+
+.input-con-unidad .unidad {
+  padding: 10px 12px;
+  background-color: #f1f3f5;
+  color: #495057;
+  font-size: 13px;
+  font-weight: 600;
+  border-left: 1px solid #ced4da;
+  user-select: none;
+}
+
+.campo-completo {
+  grid-column: 1 / -1;
+}
