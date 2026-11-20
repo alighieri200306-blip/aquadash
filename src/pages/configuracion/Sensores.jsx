@@ -261,12 +261,7 @@ export default function Sensores() {
 
               <div className="campo-form">
                 <label htmlFor="intervalo_min">
-                  Intervalo de lectura *
-                  <span className="hint">
-                    {formData.categoria === "Sensor"
-                      ? "(cada cuántos minutos toma una muestra)"
-                      : "(no aplica para actuadores)"}
-                  </span>
+                  Intervalo de lectura (cada cuántos minutos toma una muestra) *
                 </label>
                 <div className="input-con-unidad">
                   <input
