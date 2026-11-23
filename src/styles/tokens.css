@@ -1921,3 +1921,623 @@ body {
     padding: 6px 12px;
   }
 }
+
+/* ===== Mantenimiento ===== */
+.mantenimiento-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.mantenimiento-header h1 {
+  font-size: 28px;
+  color: #1a2a3a;
+  margin-bottom: 8px;
+}
+
+.mantenimiento-header .subtitulo {
+  color: #6b7c8d;
+  font-size: 15px;
+  margin-bottom: 24px;
+}
+
+/* Contadores */
+.seccion-contadores {
+  margin-bottom: 24px;
+}
+
+.grid-contadores {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 16px;
+}
+
+.contador-card {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  border-left: 4px solid #228be6;
+}
+
+.contador-card.pendiente { border-left-color: #f59f00; }
+.contador-card.progreso { border-left-color: #339af0; }
+.contador-card.completada { border-left-color: #51cf66; }
+.contador-card.total { border-left-color: #1a2a3a; }
+
+.contador-numero {
+  font-size: 32px;
+  font-weight: 700;
+  color: #1a2a3a;
+}
+
+.contador-label {
+  font-size: 13px;
+  color: #6b7c8d;
+  font-weight: 500;
+}
+
+/* Calendario */
+.seccion-calendario {
+  background: #ffffff;
+  padding: 24px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.calendario-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.calendario-header h2 {
+  font-size: 20px;
+  color: #1a2a3a;
+  margin: 0;
+}
+
+.calendario-navegacion {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.calendario-navegacion button {
+  padding: 8px 16px;
+  background: #f1f3f5;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+.calendario-navegacion button:hover {
+  background: #e9ecef;
+}
+
+.calendario-navegacion button:focus-visible {
+  outline: 2px solid #228be6;
+  outline-offset: 2px;
+}
+
+.calendario-navegacion span {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a2a3a;
+  text-transform: capitalize;
+  min-width: 200px;
+  text-align: center;
+}
+
+.calendario-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+.dia-header {
+  padding: 12px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: #6b7c8d;
+  text-transform: uppercase;
+  background: #f8f9fa;
+  border-radius: 6px;
+}
+
+.dia {
+  min-height: 80px;
+  padding: 8px;
+  background: #ffffff;
+  border: 1px solid #e9ecef;
+  border-radius: 6px;
+  position: relative;
+}
+
+.dia.hoy {
+  background: #e7f5ff;
+  border-color: #228be6;
+  border-width: 2px;
+}
+
+.dia.con-tareas {
+  background: #fff9db;
+}
+
+.dia-vacio {
+  min-height: 80px;
+  background: #f8f9fa;
+  border-radius: 6px;
+}
+
+.dia-numero {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a2a3a;
+}
+
+.tareas-dia {
+  margin-top: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.tarea-mini {
+  font-size: 10px;
+  padding: 2px 4px;
+  border-radius: 3px;
+  background: #e9ecef;
+  color: #495057;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tarea-mini.pendiente { background: #fff3bf; color: #e67700; }
+.tarea-mini.en-progreso { background: #d0ebff; color: #1864ab; }
+.tarea-mini.completada { background: #d3f9d8; color: #2b8a3e; }
+
+.tareas-extra {
+  font-size: 10px;
+  color: #6b7c8d;
+  font-weight: 600;
+}
+
+/* Tareas */
+.seccion-tareas {
+  background: #ffffff;
+  padding: 24px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.tareas-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.tareas-header h2 {
+  font-size: 20px;
+  color: #1a2a3a;
+  margin: 0;
+}
+
+.tareas-controles {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.filtro-estado {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.filtro-estado label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1a2a3a;
+}
+
+.filtro-estado select {
+  padding: 8px 12px;
+  border: 1px solid #ced4da;
+  border-radius: 6px;
+  font-size: 14px;
+  background: white;
+}
+
+.filtro-estado select:focus-visible {
+  outline: 2px solid #228be6;
+  outline-offset: 2px;
+}
+
+.btn-agregar {
+  padding: 10px 20px;
+  background: #228be6;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  transition: background 0.2s;
+}
+
+.btn-agregar:hover {
+  background: #1c7ed6;
+}
+
+.btn-agregar:focus-visible {
+  outline: 2px solid #228be6;
+  outline-offset: 2px;
+}
+
+.formulario-tarea {
+  background: #f8f9fa;
+  padding: 24px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+  border: 1px solid #e9ecef;
+}
+
+.formulario-tarea h4 {
+  margin-top: 0;
+  color: #1a2a3a;
+  margin-bottom: 16px;
+}
+
+.campo-form textarea {
+  padding: 10px 12px;
+  border: 1px solid #ced4da;
+  border-radius: 6px;
+  font-size: 14px;
+  font-family: inherit;
+  resize: vertical;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.campo-form textarea:focus {
+  outline: none;
+  border-color: #228be6;
+  box-shadow: 0 0 0 3px rgba(34, 139, 230, 0.1);
+}
+
+.lista-tareas {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.tarea-card {
+  background: #f8f9fa;
+  padding: 16px;
+  border-radius: 8px;
+  border-left: 4px solid #228be6;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.tarea-card.pendiente { border-left-color: #f59f00; }
+.tarea-card.en-progreso { border-left-color: #339af0; }
+.tarea-card.completada { border-left-color: #51cf66; }
+.tarea-card.cancelada { border-left-color: #868e96; opacity: 0.6; }
+
+.tarea-info {
+  flex: 1;
+  min-width: 250px;
+}
+
+.tarea-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tarea-header h3 {
+  font-size: 16px;
+  color: #1a2a3a;
+  margin: 0;
+}
+
+.badge-prioridad {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.badge-prioridad.baja { background: #d3f9d8; color: #2b8a3e; }
+.badge-prioridad.media { background: #d0ebff; color: #1864ab; }
+.badge-prioridad.alta { background: #ffe8cc; color: #e8590c; }
+.badge-prioridad.urgente { background: #ffe3e3; color: #c92a2a; }
+
+.tarea-descripcion {
+  font-size: 14px;
+  color: #495057;
+  margin: 8px 0;
+}
+
+.tarea-meta {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  font-size: 13px;
+  color: #6b7c8d;
+}
+
+.tarea-acciones {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-end;
+}
+
+.select-estado {
+  padding: 6px 10px;
+  border: 1px solid #ced4da;
+  border-radius: 6px;
+  font-size: 13px;
+  background: white;
+}
+
+.select-estado:disabled {
+  background: #f1f3f5;
+  cursor: not-allowed;
+}
+
+.botones-accion {
+  display: flex;
+  gap: 8px;
+}
+
+/* Componentes */
+.seccion-componentes {
+  background: #ffffff;
+  padding: 24px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.seccion-componentes h2 {
+  font-size: 20px;
+  color: #1a2a3a;
+  margin-bottom: 8px;
+}
+
+.lista-componentes {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.componente-card {
+  background: #f8f9fa;
+  padding: 16px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.componente-info {
+  flex: 1;
+  min-width: 200px;
+}
+
+.componente-info h3 {
+  font-size: 16px;
+  color: #1a2a3a;
+  margin: 0 0 4px 0;
+}
+
+.componente-tipo {
+  font-size: 13px;
+  color: #6b7c8d;
+  margin-right: 12px;
+}
+
+.componente-estado {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.componente-estado.operativo { background: #d3f9d8; color: #2b8a3e; }
+.componente-estado.degradado { background: #ffe8cc; color: #e8590c; }
+.componente-estado.reemplazado { background: #e9ecef; color: #495057; }
+
+.componente-progreso {
+  flex: 2;
+  min-width: 300px;
+}
+
+.progreso-info {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 13px;
+  color: #495057;
+}
+
+.progreso-porcentaje {
+  font-weight: 700;
+  color: #1a2a3a;
+}
+
+.barra-progreso {
+  height: 12px;
+  background: #e9ecef;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.barra {
+  height: 100%;
+  border-radius: 6px;
+  transition: width 0.3s ease;
+}
+
+.barra.ok { background: #51cf66; }
+.barra.advertencia { background: #f59f00; }
+.barra.critico { background: #fa5252; }
+
+.meses-restantes {
+  font-size: 12px;
+  color: #6b7c8d;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .mantenimiento-container {
+    padding: 16px;
+  }
+  
+  .calendario-grid {
+    gap: 2px;
+  }
+  
+  .dia {
+    min-height: 60px;
+    padding: 4px;
+  }
+  
+  .dia-numero {
+    font-size: 12px;
+  }
+  
+  .tarea-mini {
+    font-size: 8px;
+  }
+  
+  .grid-contadores {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .mantenimiento-header h1 {
+    font-size: 22px;
+  }
+  
+  .calendario-navegacion span {
+    min-width: 150px;
+    font-size: 14px;
+  }
+  
+  .tarea-card {
+    flex-direction: column;
+  }
+  
+  .tarea-acciones {
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  
+  .componente-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .componente-progreso {
+    width: 100%;
+  }
+}
+
+/* ===== Próximas Tareas en Dashboard (conectado a Supabase) ===== */
+.vacio {
+  text-align: center;
+  color: #868e96;
+  padding: 20px;
+  font-size: 14px;
+}
+
+.etiqueta-fecha {
+  padding: 6px 12px;
+  background: #e9ecef;
+  color: #495057;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.etiqueta-fecha.etiqueta-hoy {
+  background: #f59f00;
+  color: #ffffff;
+}
+
+/* El botón ahora es un enlace, aseguramos que luzca igual */
+.btn-calendario {
+  display: block;
+  width: 100%;
+  padding: 14px;
+  background: #ffffff;
+  color: #1a2a3a;
+  border: 2px solid #228be6;
+  border-radius: 8px;
+  text-align: center;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 15px;
+  transition: all 0.2s;
+  margin-top: 16px;
+  cursor: pointer;
+}
+
+.btn-calendario:hover {
+  background: #228be6;
+  color: #ffffff;
+}
+
+.btn-calendario:focus-visible {
+  outline: 2px solid #228be6;
+  outline-offset: 2px;
+}
+
+@media (max-width: 600px) {
+  .tarea-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .etiqueta-fecha {
+    align-self: flex-end;
+  }
+}

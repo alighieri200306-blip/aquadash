@@ -2,40 +2,33 @@ import {
   getSystemInfo,
   getWaterParameters,
   getPlantParameters,
-  getMaintenanceTasks,
 } from "../data/mockData";
 
-import{
-  useState,
-  useEffect
-}from "react";
-
-import{supabase}from"../lib/supabaseClient";
-
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { supabase } from "../lib/supabaseClient";
 import Navbar from "../components/Navbar";
 
 export default function Inicio() {
   const sistema = getSystemInfo();
   const parametrosAgua = getWaterParameters();
   const parametrosPlantas = getPlantParameters();
-  const tareas = getMaintenanceTasks();
-  const [nombreUsuario,setNombreUsuario]=useState("Usuario");
-  const [cargando, setCargando] = useState(true);
 
-//Funcion para obtener el nombre del usuario autenticado y mostrarlo en la interfaz
-  useEffect(() => {
+  const [nombreUsuario, setNombreUsuario] = useState("Usuario");
+  const [cargando, setCargando] = useState(true);
+  const [proximasTareas, setProximasTareas] = useState([]); 
+
+  // Función para obtener el nombre del usuario autenticado
   async function obtenerNombreUsuario() {
     try {
-      // 1. Obtener el usuario autenticado actual
       const { data: { session }, error: userError } = await supabase.auth.getSession();
       const user = session?.user;
-      
+
       if (userError || !user) {
         console.error("Error al obtener usuario:", userError);
         return;
       }
 
-      // 2. Consultar la tabla profiles para obtener el nombre
       const { data: perfil, error: perfilError } = await supabase
         .from("profiles")
         .select("nombre")
@@ -49,16 +42,52 @@ export default function Inicio() {
       }
     } catch (error) {
       console.error("Error inesperado:", error);
-    } finally {
-      setCargando(false);
     }
   }
 
-  obtenerNombreUsuario();
-}, []);
+  // FUNCIÓN: Cargar próximas tareas desde Supabase
+  async function cargarProximasTareas() {
+    try {
+      const hoy = new Date().toISOString().split("T")[0];
+      const { data, error } = await supabase
+        .from("maintenance_tasks")
+        .select("*")
+        .in("estado", ["Pendiente", "En progreso"])
+        .gte("fecha_programada", hoy)
+        .order("fecha_programada", { ascending: true })
+        .limit(3);
+
+      if (error) throw error;
+      setProximasTareas(data || []);
+    } catch (err) {
+      console.error("Error al cargar próximas tareas:", err);
+    }
+  }
+
+  // useEffect reestructurado con funciones definidas ANTES
+  useEffect(() => {
+    async function iniciar() {
+      await obtenerNombreUsuario();
+      await cargarProximasTareas();
+      setCargando(false);
+    }
+    iniciar();
+  }, []);
+
+  // Función para calcular etiqueta de fecha
+  function calcularEtiquetaFecha(fechaProgramada) {
+    const fechaTarea = new Date(fechaProgramada);
+    const hoy = new Date();
+    hoy.setHours(0, 0, 0, 0);
+    const manana = new Date(hoy);
+    manana.setDate(manana.getDate() + 1);
+
+    if (fechaTarea.toDateString() === hoy.toDateString()) return "HOY";
+    if (fechaTarea.toDateString() === manana.toDateString()) return "Mañana";
+    return fechaTarea.toLocaleDateString("es-MX", { day: "numeric", month: "short" });
+  }
 
   return (
-    // En JSX usamos "className" en lugar de "class"
     <div>
       <Navbar />
 
@@ -105,7 +134,6 @@ export default function Inicio() {
           </div>
         </section>
 
-        {/* Contenido de las plantas */}
         <h2>Parámetros de las plantas</h2>
         <section className="grilla-tarjetas">
           <div className="tarjeta">
@@ -145,7 +173,6 @@ export default function Inicio() {
                   <h3>CAM-01. Tanque de Peces</h3>
                 </div>
                 <div className="camara-feed placeholder-feed">
-                  {/* Aquí iría el video real */}
                   <p>Señal de video...</p>
                 </div>
               </div>
@@ -154,39 +181,48 @@ export default function Inicio() {
                   <h3>CAM-02. Zona de Plantas</h3>
                 </div>
                 <div className="camara-feed placeholder-feed">
-                  {/* Aquí iría el video real */}
                   <p>Señal de video...</p>
                 </div>
               </div>
             </div>
           </section>
 
-          {/* MANTENIMIENTO */}
+          {/* MANTENIMIENTO - AHORA CONECTADO A SUPABASE */}
           <section className="seccion-tareas">
             <h2>Protocolos preventivos</h2>
             <div className="panel-tareas">
               <h3>Próximas Tareas programadas</h3>
 
-              {/* TAREAS DINÁMICAS */}
-              {tareas.map((tarea) => (
-                <div
-                  key={tarea.id}
-                  className={`tarea-item ${tarea.destacada ? "destacada" : ""}`}
-                >
-                  <div className="tarea-info">
-                    <h4>{tarea.titulo}</h4>
-                    <p>{tarea.descripcion}</p>
-                  </div>
-                  {tarea.destacada && (
-                    <span className="etiqueta-hoy">{tarea.fecha}</span>
-                  )}
-                  {!tarea.destacada && <span>{tarea.fecha}</span>}
-                </div>
-              ))}
+              {proximasTareas.length === 0 ? (
+                <p className="vacio">No hay tareas programadas próximamente.</p>
+              ) : (
+                proximasTareas.map((tarea) => {
+                  const etiqueta = calcularEtiquetaFecha(tarea.fecha_programada);
+                  const esHoy = etiqueta === "HOY";
 
-              <button className="btn-calendario">
+                  return (
+                    <div
+                      key={tarea.id}
+                      className={`tarea-item ${esHoy ? "destacada" : ""}`}
+                    >
+                      <div className="tarea-info">
+                        <h4>{tarea.titulo}</h4>
+                        <p>{tarea.descripcion || "Sin descripción"}</p>
+                      </div>
+                      <span
+                        className={`etiqueta-fecha ${esHoy ? "etiqueta-hoy" : ""}`}
+                      >
+                        {etiqueta}
+                      </span>
+                    </div>
+                  );
+                })
+              )}
+
+              {/* BOTÓN CONVERTIDO EN ENLACE */}
+              <Link to="/mantenimiento" className="btn-calendario">
                 Ver Calendario Completo de Mantenimiento
-              </button>
+              </Link>
             </div>
           </section>
         </div>
@@ -194,4 +230,3 @@ export default function Inicio() {
     </div>
   );
 }
-

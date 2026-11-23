@@ -173,7 +173,7 @@ export default function Historico() {
 
   return (
     <div>
-      <Navbar /> {/* ✅ NUEVO: Navbar al inicio */}
+      <Navbar /> {/*Navbar al inicio */}
       <div className="historico-container">
         <header className="historico-header">
           <h1>Datos e Históricos</h1>
