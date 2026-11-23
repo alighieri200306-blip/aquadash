@@ -2,8 +2,7 @@ import { useState, useEffect, useMemo, useCallback } from "react";
 import { supabase } from "../lib/supabaseClient";
 import Navbar from "../components/Navbar";
 
-// ✅ Función auxiliar para obtener fecha local en formato YYYY-MM-DD
-// Evita el desfase de zona horaria que ocurría con toISOString()
+//Función auxiliar para obtener fecha local en formato YYYY-MM-DD
 function getLocalDate() {
   const now = new Date();
   const year = now.getFullYear();
@@ -15,7 +14,7 @@ function getLocalDate() {
 export default function Mantenimiento() {
   const [tareas, setTareas] = useState([]);
   const [componentes, setComponentes] = useState([]);
-  const [usuariosOperadores, setUsuariosOperadores] = useState([]); // ✅ NUEVO
+  const [usuariosOperadores, setUsuariosOperadores] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(null);
   const [filtroEstado, setFiltroEstado] = useState("todas");
@@ -30,7 +29,7 @@ export default function Mantenimiento() {
     tipo: "Preventivo",
     estado: "Pendiente",
     prioridad: "Media",
-    fecha_programada: getLocalDate(), // ✅ Usa fecha local
+    fecha_programada: getLocalDate(),
     asignado_a: "",
     notas: "",
   });
@@ -76,7 +75,7 @@ export default function Mantenimiento() {
     }
   }, []);
 
-  // ✅ NUEVA FUNCIÓN: Cargar usuarios con rol Operador o Administrador
+  // FUNCIÓN: Cargar usuarios con rol Operador o Administrador
   const cargarUsuarios = useCallback(async () => {
     try {
       const { data, error } = await supabase
@@ -97,7 +96,7 @@ export default function Mantenimiento() {
     async function iniciar() {
       await cargarMiRol();
       await cargarDatos();
-      await cargarUsuarios(); // ✅ Carga la lista de operadores
+      await cargarUsuarios(); 
     }
     iniciar();
   }, [cargarMiRol, cargarDatos, cargarUsuarios]);
@@ -132,7 +131,7 @@ export default function Mantenimiento() {
         tipo: "Preventivo",
         estado: "Pendiente",
         prioridad: "Media",
-        fecha_programada: getLocalDate(), // ✅ Reset con fecha local
+        fecha_programada: getLocalDate(), 
         asignado_a: "",
         notas: "",
       });
@@ -511,7 +510,7 @@ export default function Mantenimiento() {
                     required
                   />
                 </div>
-                {/* ✅ SELECT DE OPERADORES EN LUGAR DE INPUT */}
+                {/* SELECT DE OPERADORES EN LUGAR DE INPUT */}
                 <div className="campo-form">
                   <label htmlFor="asignado_a">Asignado a</label>
                   <select
