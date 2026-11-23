@@ -5,6 +5,8 @@ import Navbar from "./components/Navbar";
 import Inicio from "./pages/Inicio";
 import Login from "./pages/Login";
 import Configuracion from "./pages/Configuracion";
+import SkipLink from "./components/SkipLink";
+import Historico from "./pages/Historico";
 
 // Componente temporal para rutas en construcción
 function Proximamente({ nombre }) {
@@ -24,6 +26,7 @@ function Proximamente({ nombre }) {
 function App() {
   return (
     <BrowserRouter>
+      <SkipLink />
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route
@@ -46,7 +49,7 @@ function App() {
           path="/historico"
           element={
             <PrivateRoute>
-              <Proximamente nombre="Histórico" />
+              <Historico />
             </PrivateRoute>
           }
         />
