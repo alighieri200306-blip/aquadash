@@ -3,6 +3,7 @@ import Navbar from "../components/Navbar";
 import GestionUsuarios from "./configuracion/GestionUsuarios";
 import Sensores from "./configuracion/Sensores";
 import General from "./configuracion/general";
+import Soporte from "./configuracion/Soporte";
 
 export default function Configuracion() {
   const [pestañaActiva, setPestañaActiva] = useState("general");
@@ -46,19 +47,11 @@ export default function Configuracion() {
           ))}
         </div>
 
-        {/* Contenido según pestaña */}
-        {pestañaActiva === "general" && <General />}
-
-        {pestañaActiva === "soporte" && (
-          <div className="seccion-vacia">
-            <h2>Soporte Técnico</h2>
-            <p>Soporte técnico (próximamente)</p>
-          </div>
-        )}
-
-        {pestañaActiva === "usuarios" && <GestionUsuarios />}
-
-        {pestañaActiva === "sensores" && <Sensores />}
+        {/*CONTENIDO: Solo estas 4 líneas, sin placeholders */}
+      {pestañaActiva === "general" && <General />}
+      {pestañaActiva === "soporte" && <Soporte />}
+      {pestañaActiva === "usuarios" && <GestionUsuarios />}
+      {pestañaActiva === "sensores" && <Sensores />}
       </div>
     </div>
   );
