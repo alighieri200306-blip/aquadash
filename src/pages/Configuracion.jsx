@@ -5,7 +5,6 @@ import Sensores from "./configuracion/Sensores";
 import General from "./configuracion/General";
 import Soporte from "./configuracion/Soporte";
 
-
 export default function Configuracion() {
   const [pestañaActiva, setPestañaActiva] = useState("general");
 
@@ -48,11 +47,11 @@ export default function Configuracion() {
           ))}
         </div>
 
-        {/*CONTENIDO: Solo estas 4 líneas, sin placeholders */}
-      {pestañaActiva === "general" && <General />}
-      {pestañaActiva === "soporte" && <Soporte />}
-      {pestañaActiva === "usuarios" && <GestionUsuarios />}
-      {pestañaActiva === "sensores" && <Sensores />}
+        {/* ✅ CONTENIDO: Solo estas 4 líneas, SIN placeholders */}
+        {pestañaActiva === "general" && <General />}
+        {pestañaActiva === "soporte" && <Soporte />}
+        {pestañaActiva === "usuarios" && <GestionUsuarios />}
+        {pestañaActiva === "sensores" && <Sensores />}
       </div>
     </div>
   );
