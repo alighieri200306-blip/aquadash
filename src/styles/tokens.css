@@ -3365,3 +3365,220 @@ input:disabled + .slider {
     width: 100%;
   }
 }
+
+/* ===== Soporte Técnico ===== */
+.soporte-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.seccion-config-sistema,
+.seccion-info-tecnica {
+  background: #ffffff;
+  padding: 24px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.seccion-config-sistema h3,
+.seccion-info-tecnica h3 {
+  font-size: 20px;
+  color: #1a2a3a;
+  margin-bottom: 8px;
+}
+
+.lista-config {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.config-item {
+  background: #f8f9fa;
+  padding: 16px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  border-left: 4px solid #228be6;
+}
+
+.config-info {
+  flex: 1;
+  min-width: 250px;
+}
+
+.config-info h4 {
+  font-size: 16px;
+  color: #1a2a3a;
+  margin: 0 0 4px 0;
+}
+
+.config-info p {
+  font-size: 13px;
+  color: #6b7c8d;
+  margin: 0;
+}
+
+.config-control {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.valor-actual {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a2a3a;
+  min-width: 120px;
+}
+
+.input-edicion {
+  padding: 8px 12px;
+  border: 2px solid #228be6;
+  border-radius: 6px;
+  font-size: 14px;
+  background: white;
+}
+
+.input-edicion:focus {
+  outline: none;
+  border-color: #1c7ed6;
+  box-shadow: 0 0 0 3px rgba(34, 139, 230, 0.1);
+}
+
+.input-edicion[type="number"] {
+  width: 100px;
+}
+
+.input-edicion[type="text"] {
+  width: 200px;
+}
+
+.btn-editar {
+  padding: 6px 12px;
+  background: white;
+  border: 1px solid #ced4da;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.2s;
+}
+
+.btn-editar:hover {
+  background: #e7f5ff;
+  border-color: #228be6;
+}
+
+/* Toggle switch (reutilizado de General) */
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 26px;
+}
+
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ced4da;
+  transition: 0.3s;
+  border-radius: 26px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: 0.3s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: #51cf66;
+}
+
+input:checked + .slider:before {
+  transform: translateX(24px);
+}
+
+/* Información técnica */
+.grid-info-tecnica {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.info-card {
+  background: #f8f9fa;
+  padding: 16px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  border-left: 4px solid #228be6;
+}
+
+.info-label {
+  font-size: 12px;
+  color: #6b7c8d;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.info-valor {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1a2a3a;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .soporte-container {
+    padding: 16px;
+  }
+
+  .config-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .config-control {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .grid-info-tecnica {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .grid-info-tecnica {
+    grid-template-columns: 1fr;
+  }
+
+  .input-edicion[type="text"] {
+    width: 100%;
+  }
+}

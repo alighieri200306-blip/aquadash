@@ -16,9 +16,6 @@ function Proximamente({ nombre }) {
       <Navbar />
       <div style={{ textAlign: "center", padding: "60px 20px" }}>
         <h1>{nombre}</h1>
-        <p style={{ color: "#7f8c8d", fontSize: "18px" }}>
-          Esta vista estará disponible próximamente.
-        </p>
       </div>
     </div>
   );

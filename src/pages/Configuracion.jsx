@@ -2,7 +2,8 @@ import { useState } from "react";
 import Navbar from "../components/Navbar";
 import GestionUsuarios from "./configuracion/GestionUsuarios";
 import Sensores from "./configuracion/Sensores";
-import General from "./configuracion/general";
+import General from "./configuracion/General";
+import Soporte from "./configuracion/Soporte";
 import Soporte from "./configuracion/Soporte";
 
 export default function Configuracion() {
