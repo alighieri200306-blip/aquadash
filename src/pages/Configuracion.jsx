@@ -5,7 +5,7 @@ import Sensores from "./configuracion/Sensores";
 import General from "./configuracion/general";
 
 export default function Configuracion() {
-  const [pestañaActiva, setPestañaActiva] = useState("usuarios");
+  const [pestañaActiva, setPestañaActiva] = useState("general");
 
   const pestañas = [
     { id: "general", texto: "General" },
@@ -21,7 +21,10 @@ export default function Configuracion() {
         {/* Header principal */}
         <header className="config-header">
           <h1>Configuración del sistema</h1>
-          <p>Ajusta los parámetros operativos, identidades y políticas del sistema acuapónico</p>
+          <p>
+            Ajusta los parámetros operativos, identidades y políticas del
+            sistema acuapónico
+          </p>
           <div className="config-meta">
             <span className="biomasa">Biomasa activa: Mollys & Menta</span>
             <span className="sincronizacion">
@@ -44,20 +47,17 @@ export default function Configuracion() {
         </div>
 
         {/* Contenido según pestaña */}
-        {pestañaActiva === "general" && (
-          <div className="seccion-vacia">
-            <h2>General</h2>
-            <p>Configuración general del sistema (próximamente)</p>
-          </div>
-        )}
+        {pestañaActiva === "general" && <General />}
+
         {pestañaActiva === "soporte" && (
           <div className="seccion-vacia">
             <h2>Soporte Técnico</h2>
             <p>Soporte técnico (próximamente)</p>
           </div>
         )}
-        {pestañaActiva === "general" && <General />}
+
         {pestañaActiva === "usuarios" && <GestionUsuarios />}
+
         {pestañaActiva === "sensores" && <Sensores />}
       </div>
     </div>
