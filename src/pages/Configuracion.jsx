@@ -2,7 +2,7 @@ import { useState } from "react";
 import Navbar from "../components/Navbar";
 import GestionUsuarios from "./configuracion/GestionUsuarios";
 import Sensores from "./configuracion/Sensores";
-import General from "./configuracion/General";
+import General from "./configuracion/general";
 
 export default function Configuracion() {
   const [pestañaActiva, setPestañaActiva] = useState("usuarios");
