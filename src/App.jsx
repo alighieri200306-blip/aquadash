@@ -5,8 +5,9 @@ import Navbar from "./components/Navbar";
 import Inicio from "./pages/Inicio";
 import Login from "./pages/Login";
 import Configuracion from "./pages/Configuracion";
-import Historico from "./pages/Historico";           
-import Mantenimiento from "./pages/Mantenimiento";   
+import Historico from "./pages/Historico";
+import Mantenimiento from "./pages/Mantenimiento";
+import Alertas from "./pages/Alertas";
 
 // Componente temporal para rutas aún sin construir
 function Proximamente({ nombre }) {
@@ -64,7 +65,7 @@ function App() {
           path="/alertas"
           element={
             <PrivateRoute>
-              <Proximamente nombre="Alertas" />
+              <Alertas />
             </PrivateRoute>
           }
         />
