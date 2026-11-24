@@ -2,6 +2,7 @@ import { useState } from "react";
 import Navbar from "../components/Navbar";
 import GestionUsuarios from "./configuracion/GestionUsuarios";
 import Sensores from "./configuracion/Sensores";
+import General from "./configuracion/General";
 
 export default function Configuracion() {
   const [pestañaActiva, setPestañaActiva] = useState("usuarios");
@@ -55,6 +56,7 @@ export default function Configuracion() {
             <p>Soporte técnico (próximamente)</p>
           </div>
         )}
+        {pestañaActiva === "general" && <General />}
         {pestañaActiva === "usuarios" && <GestionUsuarios />}
         {pestañaActiva === "sensores" && <Sensores />}
       </div>
