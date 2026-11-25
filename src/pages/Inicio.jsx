@@ -16,12 +16,15 @@ export default function Inicio() {
 
   const [nombreUsuario, setNombreUsuario] = useState("Usuario");
   const [cargando, setCargando] = useState(true);
-  const [proximasTareas, setProximasTareas] = useState([]); 
+  const [proximasTareas, setProximasTareas] = useState([]);
 
   // Función para obtener el nombre del usuario autenticado
   async function obtenerNombreUsuario() {
     try {
-      const { data: { session }, error: userError } = await supabase.auth.getSession();
+      const {
+        data: { session },
+        error: userError,
+      } = await supabase.auth.getSession();
       const user = session?.user;
 
       if (userError || !user) {
@@ -74,17 +77,25 @@ export default function Inicio() {
     iniciar();
   }, []);
 
-  // Función para calcular etiqueta de fecha
   function calcularEtiquetaFecha(fechaProgramada) {
-    const fechaTarea = new Date(fechaProgramada);
+    // Compara strings YYYY-MM-DD directamente para evitar desfase de zona horaria
     const hoy = new Date();
-    hoy.setHours(0, 0, 0, 0);
+    const hoyStr = `${hoy.getFullYear()}-${String(hoy.getMonth() + 1).padStart(2, "0")}-${String(hoy.getDate()).padStart(2, "0")}`;
+
     const manana = new Date(hoy);
     manana.setDate(manana.getDate() + 1);
+    const mananaStr = `${manana.getFullYear()}-${String(manana.getMonth() + 1).padStart(2, "0")}-${String(manana.getDate()).padStart(2, "0")}`;
 
-    if (fechaTarea.toDateString() === hoy.toDateString()) return "HOY";
-    if (fechaTarea.toDateString() === manana.toDateString()) return "Mañana";
-    return fechaTarea.toLocaleDateString("es-MX", { day: "numeric", month: "short" });
+    if (fechaProgramada === hoyStr) return "HOY";
+    if (fechaProgramada === mananaStr) return "Mañana";
+
+    // Para otras fechas, mostrar día y mes
+    const [year, month, day] = fechaProgramada.split("-").map(Number);
+    const fecha = new Date(year, month - 1, day);
+    return fecha.toLocaleDateString("es-MX", {
+      day: "numeric",
+      month: "short",
+    });
   }
 
   return (
@@ -95,7 +106,9 @@ export default function Inicio() {
       <header className="cabecera">
         <div className="cabecera-info">
           <h1>AquaDash - Monitoreo Acuapónico</h1>
-          <p>{cargando ? "Cargando..." : `Bienvenido de nuevo ${nombreUsuario}.`}</p>
+          <p>
+            {cargando ? "Cargando..." : `Bienvenido de nuevo ${nombreUsuario}.`}
+          </p>
           <p>Estado: {sistema.estadoGlobal}.</p>
         </div>
         <div className="cabecera-estado">
@@ -197,7 +210,9 @@ export default function Inicio() {
                 <p className="vacio">No hay tareas programadas próximamente.</p>
               ) : (
                 proximasTareas.map((tarea) => {
-                  const etiqueta = calcularEtiquetaFecha(tarea.fecha_programada);
+                  const etiqueta = calcularEtiquetaFecha(
+                    tarea.fecha_programada,
+                  );
                   const esHoy = etiqueta === "HOY";
 
                   return (
