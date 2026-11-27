@@ -1,25 +1,13 @@
 import "./styles/tokens.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import PrivateRoute from "./components/PrivateRoute";
-import Navbar from "./components/Navbar";
 import Inicio from "./pages/Inicio";
 import Login from "./pages/Login";
 import Configuracion from "./pages/Configuracion";
 import Historico from "./pages/Historico";
 import Mantenimiento from "./pages/Mantenimiento";
 import Alertas from "./pages/Alertas";
-
-// Componente temporal para rutas aún sin construir
-function Proximamente({ nombre }) {
-  return (
-    <div>
-      <Navbar />
-      <div style={{ textAlign: "center", padding: "60px 20px" }}>
-        <h1>{nombre}</h1>
-      </div>
-    </div>
-  );
-}
+import Grabaciones from "./pages/Grabaciones";
 
 function App() {
   return (
@@ -70,7 +58,7 @@ function App() {
           path="/grabaciones"
           element={
             <PrivateRoute>
-              <Proximamente nombre="Grabaciones" />
+              <Grabaciones />
             </PrivateRoute>
           }
         />
